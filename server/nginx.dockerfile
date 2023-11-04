@@ -10,7 +10,7 @@ ENV GID=${GID}
 RUN delgroup dialout
 
 #COPY ./server/nginx.conf /etc/nginx/nginx.conf
-COPY ./server/nginx.conf /etc/nginx/conf.d/
+COPY ./server/catcher_nginx.conf /etc/nginx/conf.d/
 
 
 RUN mkdir -p /var/www/html
