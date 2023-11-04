@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>Requests</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'normalize.css' %}">
+</head>
+<body>
+    {% for data in request_data %}
+        <div class="request">
+            <h2>Request   id:{{data.id}}   {{ data.Datetime }}</h2>
+            <div class="delete-button-container">
+                <button class="delete-button" onclick="deleteRequest('{{ data.id }}')">Delete</button>
+            </div>
+            <div class="request-data">
+                <div class="request-details">
+                    <h3>URL</h3>
+                    <div class="data-block">
+                        {{ data.URL }}
+                    </div>
+                </div>
+                <div class="request-details">
+                    <h3>Network:</h3>
+                    <div class="data-block">
+                        {% for key, value in data.Network.items %}
+                            <p><strong>{{ key }}:</strong> {{ value }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="request-details">
+                    <h3>Request Headers:</h3>
+                    <div class="data-block">
+                        {% for key, value in data.Request_Headers.items %}
+                            <p><strong>{{ key }}:</strong> {{ value }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="request-details">
+                    <h3>Request Body:</h3>
+                    <div class="data-block">
+                        {% for key, value in data.Request_Body.items %}
+                            <p><strong>{{ key }}:</strong> {{ value }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No requests stored in Redis.</p>
+    {% endfor %}
+
+     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function deleteRequest(requestId) {
+          // Send a DELETE request to the server with the request ID
+        axios.delete(`http://127.0.0.1:8000/my-api/request/${requestId}`)
+            .then(function(response) {
+                console.log('Request deleted successfully');
+                // Reload the page after successful deletion
+                location.reload();
+            })
+            .catch(function(error) {
+                console.error('Error deleting request:', error);
+                // Display an error message
+                alert('Error deleting request. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>

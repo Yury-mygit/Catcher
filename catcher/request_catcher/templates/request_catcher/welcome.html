@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to Web App Testing Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+        .api-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .api-link:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var apiLink = document.querySelector('.api-link');
+            apiLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                var requestData = {
+                    // Test random data
+                    key1: 'value1',
+                    key2: 'value2'
+                };
+                axios.post('http://127.0.0.1:8000/my-api/', requestData)
+                    .then(function(response) {
+                        console.log('Request sent successfully');
+                        // Handle the response here
+
+                        // Reload the page if no error is returned
+                        location.reload();
+                    })
+                    .catch(function(error) {
+                        console.error('Error sending request:', error);
+                        // Display an error message
+                        alert('Error sending request. Please try again.');
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Welcome to the Web App Testing Service</h1>
+    <p>Our service is designed to help you test your web applications effectively.</p>
+    <p>Click the button below to send a test request via our API:</p>
+    <a href="#" class="api-link">Send Test Request</a>
+</body>
+</html>
