@@ -1,5 +1,9 @@
 from django.urls import path
-from .controllers.api_controller import index, my_api, catch, request_handler
+# from .controllers.api_controller import index, my_api, catch, request_handler
+from .controllers.main_view_controller import index
+from .controllers.catch_controller import catch
+from .controllers.request_handler_controller import request_handler
+from .controllers.api_controller.my_api_controller import my_api
 # from .test import index
 
 urlpatterns = [
