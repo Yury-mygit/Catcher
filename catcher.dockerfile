@@ -20,5 +20,5 @@ COPY . /code/
 
 
 # Set the entry point for the container
-#CMD ["python", "catcher/manage.py", "runserver", "0.0.0.0:8000"]
-CMD ["python", "catcher/manage.py", "runserver"]
+CMD ["python", "catcher/manage.py", "runserver", "0.0.0.0:80"]
+#CMD ["python", "catcher/manage.py", "runserver"]

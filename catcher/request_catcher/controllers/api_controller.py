@@ -26,8 +26,17 @@ def catch(request):
         # Deserialize each JSON string in the list
         request_data = [json.loads(raw_request_data_json) for raw_request_data_json in raw_request_data_json_list]
 
-        # Render the catch.html template with the request data
-        return render(request, 'request_catcher/catch.html', {'request_data': request_data, 'api_url': reverse('my-api')})
+        # print(request_data)
+        # Filter the request data for active requests
+        active_requests = [data for data in request_data if data['status'] == 'active']
+
+        # Check if there are any active requests
+        if active_requests:
+            # If there are active requests, render the 'catch' template
+            return render(request, 'request_catcher/catch.html', {'request_data': request_data, 'api_url': reverse('my-api')})
+        else:
+            # If there are no active requests, render the 'welcome' template
+            return render(request, 'request_catcher/welcome.html', {'api_url': reverse('my-api')})
 
 
 @csrf_exempt
@@ -41,83 +50,54 @@ def request_handler(request, requestId=None):
     if request.method == 'GET':
         print('dsdssddssssssssssssssssssssssssssssssssssssssssssssssssss')
         return JsonResponse({'message': 'Wrong request'})
-        # Retrieve a specific request by ID
-        # if request_id is not None:
-        #     request_data = get_object_or_404(RequestModel, id=request_id)
-        #     # Serialize the request data as needed
-        #     serialized_data = {
-        #         'id': request_data.id,
-        #         'URL': request_data.URL,
-        #         # Include other fields as needed
-        #     }
-        #     return JsonResponse(serialized_data)
-        #
-        # # Retrieve all requests
-        # else:
-        #     request_data = RequestModel.objects.all()
-        #     # Serialize the request data as needed
-        #     serialized_data = []
-        #     for request in request_data:
-        #         serialized_data.append({
-        #             'id': request.id,
-        #             'URL': request.URL,
-        #             # Include other fields as needed
-        #         })
-        #     return JsonResponse(serialized_data, safe=False)
 
     elif request.method == 'POST':
         pass
 
-        # # Create a new request
-        # # Extract the necessary data from the request body
-        # url = request.POST.get('url')
-        # # Process other fields as needed
-        #
-        # # Perform validation and create the request object
-        # request_data = RequestModel.objects.create(URL=url)
-        # # Save the request object and perform any additional operations
-        #
-        # # Return a success response or appropriate JSON data
-        # return JsonResponse({'message': 'Request created successfully'})
-
     elif request.method == 'PUT':
         pass
-        # # Update an existing request by ID
-        # request_data = get_object_or_404(RequestModel, id=request_id)
-        # # Extract the necessary data from the request body
-        # url = request.POST.get('url')
-        # # Process other fields as needed
-        #
-        # # Perform validation and update the request object
-        # request_data.URL = url
-        # # Update other fields as needed
-        # request_data.save()
-        #
-        # # Return a success response or appropriate JSON data
-        # return JsonResponse({'message': 'Request updated successfully'})
+
 
     elif request.method == 'DELETE':
-        # Delete an existing request by ID
+
+        # Get the existing request data from Redis
+
         existing_data = cache.get('request_key')
 
         if existing_data is not None:
+
             # Find the request data with the matching ID
+
             request_data = None
-            for data in existing_data:
+
+            for i, data in enumerate(existing_data):
+
                 data_dict = json.loads(data)
+                print(str(data_dict['id']))
+
                 if str(data_dict['id']) == str(requestId):  # Compare requestId directly
-                    request_data = data
+
+                    request_data = data_dict
+
                     break
+
             if request_data is not None:
-                # Remove the request data from the existing data list
-                existing_data.remove(request_data)
+                # Mark the request as inactive
+
+                request_data['status'] = 'inactive'
+
+                # Update the request data in the existing data list
+
+                existing_data[i] = json.dumps(request_data)
 
                 # Update the request data in Redis
+
                 cache.set('request_key', existing_data)
 
-                return JsonResponse({'message': 'Request deleted successfully'})
+                return JsonResponse({'message': 'Request marked as inactive'})
 
         # Return a 404 response if the request ID is not found
+
         return JsonResponse({'status': 'error', 'message': 'Request ID not found'}, status=404)
 
 @csrf_exempt
@@ -153,15 +133,16 @@ def my_api(request):
 
         # Prepare the request details
         request_details = {
-            'id':  str(uuid.uuid4()),
+            'id': str(uuid.uuid4()),
             'URL': request.build_absolute_uri(),
             'Network': network_details,
             'Request_Headers': request_headers,
             'Request_Body': json.loads(request_body) if request_body else {},
-            'Datetime': f"Date: {formatted_date}. Time: {formatted_time}"
+            'Datetime': f"Date: {formatted_date}. Time: {formatted_time}",
+            'status': 'active'  # Add this line
         }
 
-        print(request_details)
+        # print(request_details)
         # Serialize the request details to a JSON-formatted string
         request_details_json = json.dumps(request_details)
 

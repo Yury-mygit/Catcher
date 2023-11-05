@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-!f=)xefwsn9$t6w&b@*-si$he#05*1*mgevv5dp)pvdfmvfwvx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost','127.0.0.1']
 
 
 # Application definition
@@ -132,16 +132,19 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Python Django
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "TIMEOUT": 9000,  # Set the timeout to 1 hour (3600 seconds)
-        }
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#             "TIMEOUT": 9000,  # Set the timeout to 1 hour (3600 seconds)
+#         }
+#     }
+# }
+
+REDIS_HOST = 'redis_for_catcher'
+REDIS_PORT = 6379
 
 # CACHES = {
 #     "default": {
