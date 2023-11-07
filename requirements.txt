@@ -1,2 +1,3 @@
 Django
 django-redis
+django-cors-headers

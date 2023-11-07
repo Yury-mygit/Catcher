@@ -27,12 +27,22 @@ SECRET_KEY = 'django-insecure-!f=)xefwsn9$t6w&b@*-si$he#05*1*mgevv5dp)pvdfmvfwvx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost','127.0.0.1']
+CORS_ORIGIN_ALLOW_ALL = True
 
+ALLOWED_HOSTS = ['*']
+
+CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
+                      'content-type', 'accept', 'origin', 'Authorization',
+                      'access-control-allow-methods')
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',  # Add this line
     'request_catcher',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +53,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Add this line
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -155,3 +167,4 @@ REDIS_PORT = 6379
 #         }
 #     }
 # }
+
