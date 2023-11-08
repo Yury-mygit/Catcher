@@ -30,6 +30,9 @@ Road map of application:
   docker network create -d bridge catcher_net
   ```
 
+
+
+
 ### 1.2   Running in docker Nginx
 Creating image with definition of dockerfile
 
@@ -74,6 +77,10 @@ docker pull redis
 docker run --name redis_for_catcher --network catcher_net -p 6379:6379 -d redis
 ```
 
+
+
+
+
 ### 1.4   Setup and running in docker Django  
 
 ```bash
@@ -106,6 +113,10 @@ ALLOWED_HOSTS = ['0.0.0.0']
 python manage.py runserver 0.0.0.0:80
 ```
 
+```bash
+pip install -r  requirements.txt 
+```
+
 3. Configure Nginx: Configure Nginx as a proxy server to forward requests to Django.
 Create Django Application: Create a new Django application to handle incoming requests.
 Handle Incoming Requests: In Django views, write a function to catch all incoming requests, extract necessary information (request body, headers, request type), and store them in Redis.
@@ -136,4 +147,12 @@ git push
 
 ```bash
 Pip Freeze
+```
+
+```bash
+pip freeze > requirements.txt
+```
+
+```bash
+pip install -r requirements.txt
 ```
